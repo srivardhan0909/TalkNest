@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import { Schema, model } from 'mongoose';
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     fullname: {
       type: String,
@@ -27,8 +27,13 @@ const userSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-)
+);
 
-const User = mongoose.model('user', userSchema)
+// Define the User model
+const User = model('user', userSchema);
 
-module.exports = User
+// Export the User model and the find method
+const { find } = User;
+
+export { find };
+export default User;

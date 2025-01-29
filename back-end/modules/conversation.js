@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
+import { Schema, model } from 'mongoose';
 
-const conversationSchema = new mongoose.Schema(
+const conversationSchema = new Schema(
   {
     members: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'user',
       },
     ],
     messages: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'message',
         default: [],
       },
@@ -19,8 +19,11 @@ const conversationSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
+);
 
-const Conversation = mongoose.model('conversation', conversationSchema)
+const Conversation = model('conversation', conversationSchema);
 
-module.exports = Conversation
+// Explicitly export the methods as named exports
+export const create = (conversationData) => Conversation.create(conversationData);
+export const findOne = (filter) => Conversation.findOne(filter).populate('messages');
+export default Conversation;

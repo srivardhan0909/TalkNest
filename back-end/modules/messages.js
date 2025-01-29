@@ -1,14 +1,14 @@
-const mongoose = require('mongoose')
+import { Schema, model } from 'mongoose';
 
-const messageSchema = new mongoose.Schema(
+const messageSchema = new Schema(
   {
     senderId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'user',
       required: true,
     },
     receiverId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'user',
       required: true,
     },
@@ -20,7 +20,12 @@ const messageSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
-)
-const Message = mongoose.model('message', messageSchema)
+);
 
-module.exports = Message
+const Message = model('message', messageSchema);
+
+// Named export for create method
+export const create = (messageData) => Message.create(messageData);
+
+// Export the model as the default export
+export default Message;

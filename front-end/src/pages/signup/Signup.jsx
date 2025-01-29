@@ -1,13 +1,36 @@
 import React from 'react'
 import GenderCheckbox from './GenderCheckbox';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import useSignup from '../../hooks/useSignup';
 
 function signup() {
+  const [inputs, setInputs] = useState({
+    fullname: '',
+    username: '',
+    password: '',
+    confirmPassword: '',
+    gender:''
+  });
+
+  const {loading, signup} = useSignup();
+
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+    console.log(inputs);
+    await signup(inputs)
+  }
+  
+  const handlecheckbox = (gender)=>{
+    setInputs({...inputs,gender})
+  }
+  
   return (
     <div className="max-w-md p-6 mx-auto mt-10 bg-white rounded-lg shadow-md">
       <h1 className="mb-6 text-3xl font-bold text-center">Signup
         <span className='ml-2 font-serif font-bold text-blue-500 '>TalkNest</span>
       </h1>
-      <form>
+      <form onSubmit={handleSubmit}>
       <div className="mb-4">
           <label className="block mb-2 text-base text-gray-700">
             FullName
@@ -16,6 +39,8 @@ function signup() {
             type="text" 
             placeholder='Enter your username' 
             className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+            value={inputs.fullname}
+            onChange={(e) => setInputs({...inputs, fullname: e.target.value})}
           />
         </div>
         <div className="mb-4">
@@ -26,6 +51,8 @@ function signup() {
             type="text" 
             placeholder='Enter your username' 
             className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+            value={inputs.username}
+            onChange={(e) => setInputs({...inputs, username: e.target.value})}
           />
         </div>
         <div className="mb-4">
@@ -36,6 +63,8 @@ function signup() {
             type="password" 
             placeholder='Enter your password' 
             className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+            value={inputs.password}
+            onChange={(e) => setInputs({...inputs, password: e.target.value})}
           />
         </div>
         <div className="mb-4">
@@ -46,13 +75,15 @@ function signup() {
             type="password" 
             placeholder='Enter your password' 
             className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+            value={inputs.confirmPassword}
+            onChange={(e) => setInputs({...inputs, confirmPassword: e.target.value})}
           />
         </div>
-        <GenderCheckbox />
+        <GenderCheckbox onCheckboxChange={handlecheckbox} selectedGender={inputs.gender} />
         <div className="mb-4">
-          <a className="flex items-center text-sm text-gray-500 underline hover:cursor-pointer hover:text-blue-500" href='#'>
+          <Link to='/login' className="flex items-center text-sm text-gray-500 underline hover:cursor-pointer hover:text-blue-500">
              Already have an account?
-          </a>
+          </Link>
         </div>
         <div>
           <button 

@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
-const { getSidebarUsers } = require('../controllers/user')
-const { checkAuthCookie } = require('../middleware/auth')
+import { Router } from 'express'
+const router = Router()
+import { getSidebarUsers } from '../controllers/user.js'
+import { checkAuthCookie } from '../middleware/auth.js'
 
 router.get('/', checkAuthCookie('jwt'), getSidebarUsers)
 
-module.exports = router
+export default router

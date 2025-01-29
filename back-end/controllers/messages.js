@@ -1,23 +1,25 @@
-const Message = require('../modules/messages')
-const Conversation = require('../modules/conversation')
+import { create } from '../modules/messages.js'
+import { findOne, create as _create } from '../modules/conversation.js'
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
-const sendMessage = async (req, res) => {
+
+export const sendMessage = async (req, res) => {
   try {
-    const { text: text } = req.body
+    const { text } = req.body
     const { id: receiverId } = req.params
     const senderId = req.user.userId
 
-    let conversation = await Conversation.findOne({
+    let conversation = await findOne({
       members: { $all: [senderId, receiverId] },
     })
 
     if (!conversation) {
-      conversation = await Conversation.create({
+      conversation = await _create({
         members: [senderId, receiverId],
       })
     }
 
-    const newMessage = await Message.create({
+    const newMessage = await create({
       senderId,
       receiverId,
       text,
@@ -31,19 +33,26 @@ const sendMessage = async (req, res) => {
     await newMessage.save()
     await conversation.save()
 
-    res.status(200).json(newMessage)
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			// io.to(<socket_id>).emit() used to send events to specific client
+			io.to(receiverSocketId).emit("newMessage", newMessage);
+		}
+
+    res.status(201).json(newMessage)
   } catch (error) {
     console.log('Error in sending message', error.message)
     res.status(500).json({ message: 'Internal Server Error' })
   }
 }
 
-const getMessage = async (req, res) => {
+export const getMessage = async (req, res) => {
   try {
     const { id: usertoChatId } = req.params
     const senderId = req.user.userId
 
-    const conversation = await Conversation.findOne({
+    const conversation = await findOne({
       members: { $all: [senderId, usertoChatId] },
     }).populate('messages')
 
@@ -62,7 +71,4 @@ const getMessage = async (req, res) => {
   }
 }
 
-module.exports = {
-  sendMessage,
-  getMessage,
-}
+

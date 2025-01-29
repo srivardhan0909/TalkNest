@@ -1,20 +1,22 @@
 // const Conversation = require("../modules/conversation")
-const User = require('../modules/user')
+import User from '../modules/user.js';
 
-const getSidebarUsers = async (req, res) => {
+export const getSidebarUsers = async (req, res) => {
   try {
-    const loginuser = req.user.userId
-    const users = await User.find({ _id: { $ne: loginuser } }).select(
-      '-password'
-    )
+    if (!req.user || !req.user.userId) {
+      // Handle missing or invalid token
+      return res.status(401).json({ message: "Unauthorized: Token is invalid or missing" });
+    }
 
-    res.status(200).json(users)
+    const loginuser = req.user.userId;
+
+    // Fetch users excluding the logged-in user
+    const users = await User.find({ _id: { $ne: loginuser } }).select("-password");
+
+    res.status(200).json(users);
   } catch (error) {
-    console.log('Error in getting sidebar users', error.message)
-    res.status(500).json({ message: 'Internal Server Error' })
+    console.error("Error in getting sidebar users:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
-module.exports = {
-  getSidebarUsers,
-}
