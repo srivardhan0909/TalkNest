@@ -1,18 +1,27 @@
 const MessageSkeleton = () => {
 	return (
 		<>
-			<div className='flex items-center gap-3'>
-				<div className='w-10 h-10 rounded-full skeleton shrink-0'></div>
-				<div className='flex flex-col gap-1'>
-					<div className='w-40 h-4 skeleton'></div>
-					<div className='w-40 h-4 skeleton'></div>
+			{/* Left side loading skeleton */}
+			<div className="flex items-center gap-4 animate-pulse">
+				{/* Avatar Skeleton */}
+				<div className="w-12 h-12 rounded-full bg-gradient-to-r from-gray-300 to-gray-500"></div>
+
+				{/* Message text skeleton */}
+				<div className="flex flex-col gap-2">
+					<div className="w-40 h-4 bg-gradient-to-r from-gray-300 to-gray-500 rounded-full"></div>
+					<div className="w-36 h-4 bg-gradient-to-r from-gray-300 to-gray-500 rounded-full"></div>
 				</div>
 			</div>
-			<div className='flex items-center justify-end gap-3'>
-				<div className='flex flex-col gap-1'>
-					<div className='w-40 h-4 skeleton'></div>
+
+			{/* Right side loading skeleton */}
+			<div className="flex items-center justify-end gap-4 animate-pulse">
+				{/* Message text skeleton */}
+				<div className="flex flex-col gap-2">
+					<div className="w-40 h-4 bg-gradient-to-r from-gray-300 to-gray-500 rounded-full"></div>
 				</div>
-				<div className='w-10 h-10 rounded-full skeleton shrink-0'></div>
+
+				{/* Avatar Skeleton */}
+				<div className="w-12 h-12 rounded-full bg-gradient-to-r from-gray-300 to-gray-500"></div>
 			</div>
 		</>
 	);

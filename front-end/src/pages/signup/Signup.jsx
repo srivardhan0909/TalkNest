@@ -1,96 +1,110 @@
-import React from 'react'
-import GenderCheckbox from './GenderCheckbox';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import useSignup from '../../hooks/useSignup';
+import React, { useState } from 'react'
+import GenderCheckbox from './GenderCheckbox'
+import { Link } from 'react-router-dom'
+import useSignup from '../../hooks/useSignup'
 
-function signup() {
+function Signup() {
   const [inputs, setInputs] = useState({
     fullname: '',
     username: '',
     password: '',
     confirmPassword: '',
-    gender:''
-  });
+    gender: '',
+  })
 
-  const {loading, signup} = useSignup();
+  const { loading, signup } = useSignup()
 
-  const handleSubmit = async (e) =>{
-    e.preventDefault();
-    console.log(inputs);
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // console.log(inputs)
     await signup(inputs)
   }
-  
-  const handlecheckbox = (gender)=>{
-    setInputs({...inputs,gender})
+
+  const handleCheckbox = (gender) => {
+    setInputs({ ...inputs, gender })
   }
-  
+
   return (
-    <div className="max-w-md p-6 mx-auto mt-10 bg-white rounded-lg shadow-md">
-      <h1 className="mb-6 text-3xl font-bold text-center">Signup
-        <span className='ml-2 font-serif font-bold text-blue-500 '>TalkNest</span>
+    <div className="max-w-md p-8 mx-auto mt-16 mb-16 bg-white rounded-3xl transform transition-transform duration-500 ">
+      <h1 className="mb-6 text-4xl font-bold text-center text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+        Signup
+        <span className="ml-2 font-serif text-blue-600 font-bold">
+          TalkNest
+        </span>
       </h1>
       <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-          <label className="block mb-2 text-base text-gray-700">
-            FullName
-          </label>
-          <input 
-            type="text" 
-            placeholder='Enter your username' 
-            className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+        <div className="mb-4">
+          <label className="block mb-2 text-lg text-gray-700">Full Name</label>
+          <input
+            type="text"
+            placeholder="Enter your full name"
+            className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             value={inputs.fullname}
-            onChange={(e) => setInputs({...inputs, fullname: e.target.value})}
+            onChange={(e) => setInputs({ ...inputs, fullname: e.target.value })}
           />
         </div>
+
         <div className="mb-4">
-          <label className="block mb-2 text-base text-gray-700">
-            Username
-          </label>
-          <input 
-            type="text" 
-            placeholder='Enter your username' 
-            className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+          <label className="block mb-2 text-lg text-gray-700">Username</label>
+          <input
+            type="text"
+            placeholder="Enter your username"
+            className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             value={inputs.username}
-            onChange={(e) => setInputs({...inputs, username: e.target.value})}
+            onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
           />
         </div>
+
         <div className="mb-4">
-          <label className="block mb-2 text-base text-gray-700">
-            Password
-          </label>
-          <input 
-            type="password" 
-            placeholder='Enter your password' 
-            className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+          <label className="block mb-2 text-lg text-gray-700">Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             value={inputs.password}
-            onChange={(e) => setInputs({...inputs, password: e.target.value})}
+            onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
           />
         </div>
+
         <div className="mb-4">
-          <label className="block mb-2 text-base text-gray-700">
-            ConfirmPassword
+          <label className="block mb-2 text-lg text-gray-700">
+            Confirm Password
           </label>
-          <input 
-            type="password" 
-            placeholder='Enter your password' 
-            className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+          <input
+            type="password"
+            placeholder="Confirm your password"
+            className="w-full px-5 py-3 border border-gray-300 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
             value={inputs.confirmPassword}
-            onChange={(e) => setInputs({...inputs, confirmPassword: e.target.value})}
+            onChange={(e) =>
+              setInputs({ ...inputs, confirmPassword: e.target.value })
+            }
           />
         </div>
-        <GenderCheckbox onCheckboxChange={handlecheckbox} selectedGender={inputs.gender} />
-        <div className="mb-4">
-          <Link to='/login' className="flex items-center text-sm text-gray-500 underline hover:cursor-pointer hover:text-blue-500">
-             Already have an account?
+
+        <GenderCheckbox
+          onCheckboxChange={handleCheckbox}
+          selectedGender={inputs.gender}
+        />
+
+        <div className="mb-4 text-center">
+          <Link
+            to="/login"
+            className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+          >
+            Already have an account? <span className="underline">Login</span>
           </Link>
         </div>
+
         <div>
-          <button 
-            type="submit" 
-            className='w-full py-2 text-white transition-colors bg-blue-500 rounded-md hover:bg-blue-600'
+          <button
+            type="submit"
+            className="w-full py-3 text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all"
           >
-            Signup
+            {loading ? (
+              <div className="w-full h-5 border-4 border-t-transparent border-blue-400 rounded-full animate-spin mx-auto"></div>
+            ) : (
+              'Signup'
+            )}
           </button>
         </div>
       </form>
@@ -98,4 +112,4 @@ function signup() {
   )
 }
 
-export default signup
+export default Signup
