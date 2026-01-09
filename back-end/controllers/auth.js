@@ -76,7 +76,13 @@ const login = async (req, res) => {
 
 const logout = (req, res) => {
   try {
-    res.cookie('jwt', '', { maxAge: 0 }); // Clear the cookie
+    // Cookie options for cross-origin requests (production)
+    const cookieOptions = {
+      maxAge: 0,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    };
+    res.cookie('jwt', '', cookieOptions); // Clear the cookie
     res.status(200).json({ message: 'User logout successfully' });
   } catch (error) {
     console.log(error);
