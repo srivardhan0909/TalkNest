@@ -30,7 +30,7 @@ const signup = async (req, res) => {
 
   try {
     if (newUser) {
-      generateTokenAndSetCookie(newUser._id, res);
+      const token = generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
       res.status(201).json({
         _id: newUser._id,
@@ -38,6 +38,7 @@ const signup = async (req, res) => {
         username: newUser.username,
         gender: newUser.gender,
         profilePic: newUser.profilePic,
+        token, // Include token in response for cross-origin
       });
     }
   } catch (error) {
@@ -60,13 +61,14 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid password' });
     }
 
-    generateTokenAndSetCookie(user._id, res);
+    const token = generateTokenAndSetCookie(user._id, res);
 
     res.status(200).json({
       _id: user._id,
       fullname: user.fullname,
       username: user.username,
       profilePic: user.profilePic,
+      token, // Include token in response for cross-origin
     });
   } catch (error) {
     console.log(error);

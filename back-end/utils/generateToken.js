@@ -17,10 +17,13 @@ const generateTokenAndSetCookie = (userId, res) => {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+        secure: process.env.NODE_ENV === 'production',
     };
     
     res.cookie('jwt', token, cookieOptions);
+    
+    // Return the token so it can be sent in the response body
+    return token;
 };
 
 export default generateTokenAndSetCookie;

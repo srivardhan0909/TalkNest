@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getApiUrl } from "../utils/api";
+import { getApiUrl, getAuthHeaders } from "../utils/api";
 
 const useGetConversations = () => {
 	const [loading, setLoading] = useState(false);
@@ -12,10 +12,8 @@ const useGetConversations = () => {
 			try {
 				const res = await fetch(getApiUrl('/api/user'), {
 					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					credentials: 'include', // Ensures cookies are sent with the request.
+					headers: getAuthHeaders(),
+					credentials: 'include',
 				});
 
 				if (!res.ok) {
