@@ -1,41 +1,54 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
-import { getApiUrl, getAuthHeaders } from "../utils/api";
+import { getApiUrl, getAuthToken } from "../utils/api";
+import { useAuthContext } from "../context/AuthContext";
 
 const useGetConversations = () => {
 	const [loading, setLoading] = useState(false);
 	const [conversations, setConversations] = useState([]);
+	const { authUser } = useAuthContext();
 
-	useEffect(() => {
-		const getConversations = async () => {
-			setLoading(true);
-			try {
-				const res = await fetch(getApiUrl('/api/user'), {
-					method: 'GET',
-					headers: getAuthHeaders(),
-					credentials: 'include',
-				});
+	const fetchConversations = useCallback(async () => {
+		const token = getAuthToken();
+		
+		// Don't fetch if no token available
+		if (!token) {
+			console.log("No auth token found, skipping conversations fetch");
+			return;
+		}
+		
+		setLoading(true);
+		try {
+			const res = await fetch(getApiUrl('/api/user'), {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`,
+				},
+				credentials: 'include',
+			});
 
-				if (!res.ok) {
-					 // Log the status and statusText for more information
-					console.error(`Error: ${res.status} ${res.statusText}`);
-					// If the response status is not in the 200-299 range, throw an error.
-					throw new Error("Failed to fetch conversations.");
-				}
-
-				const data = await res.json();
-				setConversations(data);
-			} catch (error) {
-				console.error("Error fetching conversations:", error);
-			} finally {
-				setLoading(false);
+			if (!res.ok) {
+				console.error(`Error: ${res.status} ${res.statusText}`);
+				throw new Error("Failed to fetch conversations.");
 			}
-		};
 
-		getConversations();
+			const data = await res.json();
+			setConversations(data);
+		} catch (error) {
+			console.error("Error fetching conversations:", error);
+		} finally {
+			setLoading(false);
+		}
 	}, []);
 
-	return { loading, conversations };
+	useEffect(() => {
+		if (authUser) {
+			fetchConversations();
+		}
+	}, [authUser, fetchConversations]);
+
+	return { loading, conversations, refetch: fetchConversations };
 };
 
 export default useGetConversations;
