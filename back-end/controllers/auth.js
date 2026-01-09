@@ -16,8 +16,9 @@ const signup = async (req, res) => {
     return res.status(400).json({ message: 'User already exists' });
   }
 
-  const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
-  const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
+  // Using DiceBear API for reliable avatars - professional initials style
+  const boyProfilePic = `https://api.dicebear.com/7.x/initials/svg?seed=${username}&backgroundColor=3b82f6,06b6d4,10b981&fontFamily=Arial&fontWeight=600`;
+  const girlProfilePic = `https://api.dicebear.com/7.x/initials/svg?seed=${username}&backgroundColor=8b5cf6,ec4899,f59e0b&fontFamily=Arial&fontWeight=600`;
 
   const newUser = await User.create({
     fullname,

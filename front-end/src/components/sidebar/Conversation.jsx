@@ -10,6 +10,17 @@ const Conversation = ({ conversation, lastIdx }) => {
 
   // Example: You would get this from your messages state/context
   const unreadCount = conversation.unreadCount || 0
+  
+  // Fallback avatar - also handles broken avatar.iran.liara.run URLs
+  const getProfilePic = () => {
+    const pic = conversation.profilePic;
+    if (!pic || pic.includes('avatar.iran.liara.run')) {
+      return `https://api.dicebear.com/7.x/initials/svg?seed=${conversation.username || 'default'}&backgroundColor=3b82f6,8b5cf6,06b6d4,10b981,f59e0b&fontFamily=Arial&fontWeight=600`;
+    }
+    return pic;
+  };
+  const profilePic = getProfilePic();
+  
   console.log(conversation)
 
   return (
@@ -30,7 +41,7 @@ const Conversation = ({ conversation, lastIdx }) => {
           }`}
         >
           <img
-            src={conversation.profilePic}
+            src={profilePic}
             alt="user avatar"
             className="w-full h-full object-cover"
           />

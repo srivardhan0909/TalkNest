@@ -8,6 +8,9 @@ export const useSocketContext = () => {
 	return useContext(SocketContext);
 };
 
+// Use environment variable for backend URL, fallback to localhost for development
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+
 export const SocketContextProvider = ({ children }) => {
 	const [socket, setSocket] = useState(null);
 	const [onlineUsers, setOnlineUsers] = useState([]);
@@ -15,10 +18,11 @@ export const SocketContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		if (authUser) {
-			const socket = io("http://localhost:3000", {
+			const socket = io(BACKEND_URL, {
 				query: {
 					userId: authUser._id,
 				},
+				withCredentials: true,
 			});
 
 			setSocket(socket);

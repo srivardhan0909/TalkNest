@@ -9,7 +9,19 @@ const Message = ({ message }) => {
 	const fromMe = message.senderId === authUser._id;
 	const formattedTime = extractTime(message.createdAt);
   const chatClassName = fromMe ? "justify-end" : "justify-start";
-	const profilePic = fromMe ? authUser?.profilePic : selectedConversation?.profilePic;
+	
+	// Fallback avatar using DiceBear - also handles broken avatar.iran.liara.run URLs
+	const getProfilePic = () => {
+		const pic = fromMe ? authUser?.profilePic : selectedConversation?.profilePic;
+		const name = fromMe ? authUser?.username : selectedConversation?.username;
+		// Check if pic is missing or uses the broken avatar service
+		if (!pic || pic.includes('avatar.iran.liara.run')) {
+			return `https://api.dicebear.com/7.x/initials/svg?seed=${name || 'default'}&backgroundColor=3b82f6,8b5cf6,06b6d4,10b981,f59e0b&fontFamily=Arial&fontWeight=600`;
+		}
+		return pic;
+	};
+	const profilePic = getProfilePic();
+	
 	const bubbleBgColor = fromMe ? "bg-blue-500" : "bg-purple-500";
   // console.log(authUser)
   // console.log(localStorage.getItem("profilePic"));

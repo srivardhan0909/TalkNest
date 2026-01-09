@@ -1,10 +1,11 @@
 import { useState } from "react";
 import useConversation from "../zustand/useConversation";
 import toast from "react-hot-toast";
+import { getApiUrl } from "../utils/api";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
-  const { messages, setMessages, selectedConversation } = useConversation();
+  const { setMessages, selectedConversation } = useConversation();
 
   const sendMessage = async (text) => {
     setLoading(true);
@@ -19,7 +20,7 @@ const useSendMessage = () => {
       }
 
       // Send the message to the backend
-      const res = await fetch(`/api/message/send/${selectedConversation._id}`, {
+      const res = await fetch(getApiUrl(`/api/message/send/${selectedConversation._id}`), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +38,7 @@ const useSendMessage = () => {
       const data = await res.json();
 
       // Add the new message to the messages list
-      setMessages([...messages, data]);
+      setMessages((prevMessages) => [...(prevMessages || []), data]);
     } catch (error) {
       // Display the error to the user
       toast.error(error.message || "Something went wrong while sending the message");
